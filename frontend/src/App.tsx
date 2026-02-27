@@ -5,7 +5,8 @@ import ActivityList from './ActivityList';
 import { Plus, Bell, User, MessageCircle } from 'lucide-react';
 import CreateActivityModal from './CreateActivityModal';
 import { api } from './api';
-import type { Activity } from './types';
+import type { Activity } from './MockData';
+ 
 
 const App: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -14,6 +15,9 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Alla');
   const [isOpen, setIsOpen] = useState(false)
+  const [chosenActivity, setChosenActivity] = useState<number | null>(null)
+
+  console.log("chosen activity in app.tsx", chosenActivity)
 
   // Fetch activities from API
   const fetchActivities = async () => {
@@ -107,7 +111,10 @@ const App: React.FC = () => {
                 Utforska på karta
               </h2>
             </div>
-            <MapSection activities={filteredActivities} />
+            <MapSection 
+              activities={filteredActivities} 
+              setChosenActivity={(id) => setChosenActivity(id)}
+            />
             
             {/* Quick Actions / Stats Card */}
             <div className="bg-brand-soft-white backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-brand-dark/10">
@@ -148,6 +155,7 @@ const App: React.FC = () => {
           ) : (
             <ActivityList activities={filteredActivities} />
           )}
+          <ActivityList chosenActivity={chosenActivity}  activities={filteredActivities} />
         </section>
 
       </main>

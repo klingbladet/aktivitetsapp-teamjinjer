@@ -1,4 +1,5 @@
-import type { Activity, CreateActivityRequest, CreateUserRequest, User } from './types';
+import type { Activity } from './MockData';
+import type { CreateActivityRequest, CreateUserRequest, User } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5180';
 

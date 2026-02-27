@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
-import type { Activity } from './types';
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
+import type { Activity } from './MockData';
+import { OverlayView } from "@react-google-maps/api";
 
 interface MapSectionProps {
   activities: Activity[];
+  setChosenActivity: (id:number) => void
 }
 
 const containerStyle = {
@@ -12,16 +14,7 @@ const containerStyle = {
   borderRadius: '1rem',
 };
 
-const getMarkerIcon = (): google.maps.Symbol => ({
-  path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z", // Klassisk "pin"-form (SVG-path)
-  fillColor: '#430119', // Exempel: Blå för fotboll, orange för resten
-  fillOpacity: 1,
-  strokeWeight: 1.5,
-  strokeColor: "#FFFFFF",
-  scale: 1.5,
-  anchor: new google.maps.Point(12, 22), // Sätter "spetsen" på rätt ställe
-});
-const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
+const MapSection: React.FC<MapSectionProps> = ({ activities, setChosenActivity }) => {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
 
   // Memoize libraries to prevent unnecessary re-renders
@@ -105,32 +98,57 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
           styles: monoChromeStyle
         }}
       >
-    {activities.map((activity) => (
-      <MarkerF
-        key={activity.id}
-        position={{ lat: activity.lat, lng: activity.lng }}
-        onClick={() => setSelectedActivity(activity)}
-        title={activity.title}
-        // HÄR LÄGGER DU TILL IKONEN:
-        icon={getMarkerIcon()} 
-      />
-    ))}
 
+        {activities.map((activity) => (
+          <MarkerF
+            key={activity.id}
+            position={{ lat: activity.lat, lng: activity.lng }}
+            onClick={() => setChosenActivity(activity.id)}
+            onMouseOver={() => setSelectedActivity(activity)}
+            title={activity.title}
+          />
+        ))}
+        
         {selectedActivity && (
-          <InfoWindowF
+          <OverlayView
             position={{ lat: selectedActivity.lat, lng: selectedActivity.lng }}
-            onCloseClick={() => setSelectedActivity(null)}
+            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <div className="p-2 max-w-50 bg-white">
-              <h3 className="font-bold text-gray-800 text-sm mb-1">{selectedActivity.title}</h3>
-              <p className="text-xs text-gray-600 mb-2">{selectedActivity.location}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-blue-600">{selectedActivity.time}</span>
-                <span className="text-xs text-gray-400">{selectedActivity.participants}/{selectedActivity.maxParticipants}</span>
+            <div className="relative -translate-x-30  -translate-y-60">
+              
+              {/* Card */}
+              <div className="w-56 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                <img
+                  src="/volleyball.png"
+                  className="w-full h-24 object-cover block"
+                />
+
+                <div className="p-3">
+                  <h3 className="text-sm font-semibold text-gray-800">
+                    {selectedActivity.title}
+                  </h3>
+
+                  <p className="text-xs text-gray-500 mt-1">
+                    {selectedActivity.location}
+                  </p>
+
+                  <div className="flex justify-between items-center mt-3">
+                    <span className="text-xs font-semibold text-blue-600">
+                      {selectedActivity.time}
+                    </span>
+
+                    <span className="text-xs text-gray-400">
+                      {selectedActivity.participants}/{selectedActivity.maxParticipants}
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              {/* Pointer Arrow */}
+              <div className="w-3 h-3 bg-white rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1 shadow-md border-r border-b border-gray-100"></div>
             </div>
-          </InfoWindowF>
-        )}
+          </OverlayView>
+        )}      
       </GoogleMap>
     </div>
   );

@@ -5,9 +5,31 @@ import { LayoutGrid, ListFilter } from 'lucide-react';
 
 interface ActivityListProps {
   activities: Activity[];
+  chosenActivity?: number | null
 }
 
-const ActivityList: React.FC<ActivityListProps> = ({ activities }) => {
+const ActivityList: React.FC<ActivityListProps> = ({ activities, chosenActivity }) => {
+  let sortedActivities;
+  console.log("chosen activity", chosenActivity)
+  console.log("activities", activities)
+
+  if (chosenActivity && chosenActivity !== null) {
+    const activityToMove = activities.find(a => a.id === chosenActivity);
+    
+    if (activityToMove) {
+      sortedActivities = [
+        activityToMove,
+        ...activities.filter(a => a.id !== chosenActivity)
+      ];
+    } else {
+      sortedActivities = [...activities];
+    }
+  } else {
+    sortedActivities = activities;
+  } 
+  
+  console.log("sorted activities", sortedActivities)
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6 px-4">
@@ -26,10 +48,15 @@ const ActivityList: React.FC<ActivityListProps> = ({ activities }) => {
       </div>
 
       <div className="space-y-4 px-4 pb-12">
-        {activities.length > 0 ? (
-          activities.map((activity) => (
-            <ActivityCard key={activity.id} activity={activity} />
-          ))
+        {sortedActivities.length > 0 ? (
+          sortedActivities.map((activity) => (
+              <ActivityCard 
+                key={activity.id} 
+                chosen={chosenActivity == activity.id}  
+                activity={activity} 
+              />
+          )
+          )
         ) : (
           <div className="bg-brand-light/30 backdrop-blur-sm rounded-2xl p-12 flex flex-col items-center justify-center border border-dashed border-brand-dark/10 shadow-sm">
              <div className="w-16 h-16 bg-brand-dark/5 rounded-full flex items-center justify-center mb-4 text-brand-dark/20">
