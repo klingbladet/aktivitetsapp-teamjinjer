@@ -53,7 +53,7 @@ const App: React.FC = () => {
       </nav>
 
       {/* Hero / Banner Section */}
-      <header className="bg-linear-to-br from-blue-700 to-blue-900 text-white pt-12 pb-24 px-6 text-center w-full">
+      <header className=" from-brand-light to-brand-dark text-brand-dark pt-12 pb-24 px-6 text-center w-full">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight font-display">
             Upptäck ditt nästa <span className="text-brand-brand-dark italic">äventyr</span> i Stockholm

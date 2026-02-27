@@ -98,7 +98,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
               <div className='w-full px-1'>
                 <h4>Deltagare ({activity.participants}/{activity.maxParticipants}):</h4>
                 <p>{activity.participantNames.map((name, index) => (
-                  <div className='py-2 px-3 border border-blue-500/30 rounded-3xl bg-blue-100/50 text-blue-500/70 m-2'
+                  <div className='py-2 px-3 border border-brand-light rounded-3xl bg-blue-100/50 text-brand-dark m-2'
                     key={index}>
                       {name}
                   </div>
