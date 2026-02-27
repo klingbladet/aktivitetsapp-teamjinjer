@@ -4,10 +4,12 @@ import MapSection from './MapSection';
 import ActivityList from './ActivityList';
 import { mockActivities } from './MockData';
 import { Plus, Bell, User, MessageCircle } from 'lucide-react';
+import CreateActivityModal from './CreateActivityModal';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Alla');
+  const [isOpen, setIsOpen] = useState(false)
 
   // Filter logic
   const filteredActivities = useMemo(() => {
@@ -51,7 +53,7 @@ const App: React.FC = () => {
       </nav>
 
       {/* Hero / Banner Section */}
-      <header className="bg-brand-light text-brand-dark pt-12 pb-24 px-6 text-center w-full">
+      <header className="bg-linear-to-br from-blue-700 to-blue-900 text-white pt-12 pb-24 px-6 text-center w-full">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight font-display">
             Upptäck ditt nästa <span className="text-brand-brand-dark italic">äventyr</span> i Stockholm
@@ -74,13 +76,9 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 w-full">
-        {/* Left Column: List of Activities */}
-        <section className="flex-1 order-2 lg:order-1">
-          <ActivityList activities={filteredActivities} />
-        </section>
 
-        {/* Right Column: Map Section (Sticky on Desktop) */}
-        <aside className="w-full lg:w-[450px] order-1 lg:order-2">
+        {/* Left Column: Map Section (Sticky on Desktop) */}
+        <aside className="w-full lg:w-175 order-2 lg:order-1">
           <div className="sticky top-24">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-brand-dark flex items-center gap-2 font-display">
@@ -93,7 +91,7 @@ const App: React.FC = () => {
             <div className="bg-brand-light/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-brand-dark/10">
                <h3 className="font-bold text-brand-dark mb-3">Snabba steg</h3>
                <div className="space-y-3">
-                  <button className="w-full flex items-center justify-between p-3 rounded-xl bg-brand-dark text-brand-light hover:bg-brand-dark/90 transition-colors group">
+                  <button onClick={() => setIsOpen(true)} className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group">
                      <span className="font-bold text-sm">Skapa ny aktivitet</span>
                      <div className="w-6 h-6 bg-brand-light rounded-md flex items-center justify-center text-brand-dark group-hover:scale-110 transition-transform">
                         <Plus size={14} strokeWidth={4} />
@@ -106,6 +104,12 @@ const App: React.FC = () => {
             </div>
           </div>
         </aside>
+
+        {/* Right Column: List of Activities */}
+        <section className="flex-1 order-1 lg:order-2">
+          <ActivityList activities={filteredActivities} />
+        </section>
+
       </main>
 
       {/* Mobile Bottom Navigation (Optional) */}
@@ -131,6 +135,13 @@ const App: React.FC = () => {
            </div>
         </div>
       </footer>
+
+      <CreateActivityModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Create Activity"
+      />
+      
     </div>
   );
 };
