@@ -78,12 +78,9 @@ const App: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 w-full">
         {/* Left Column: List of Activities */}
-        <section className="flex-1 order-2 lg:order-1">
-          <ActivityList activities={filteredActivities} />
-        </section>
 
         {/* Right Column: Map Section (Sticky on Desktop) */}
-        <aside className="w-full lg:w-[450px] order-1 lg:order-2">
+        <aside className="w-full lg:w-175 order-2 lg:order-1">
           <div className="sticky top-24">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -109,6 +106,11 @@ const App: React.FC = () => {
             </div>
           </div>
         </aside>
+
+        <section className="flex-1 order-1 lg:order-2">
+          <ActivityList activities={filteredActivities} />
+        </section>
+
       </main>
 
       {/* Mobile Bottom Navigation (Optional) */}
