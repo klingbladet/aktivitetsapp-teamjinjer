@@ -4,10 +4,12 @@ import MapSection from './MapSection';
 import ActivityList from './ActivityList';
 import { mockActivities } from './MockData';
 import { Plus, Bell, User, MessageCircle } from 'lucide-react';
+import CreateActivityModal from './CreateActivityModal';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Alla');
+  const [isOpen, setIsOpen] = useState(false)
 
   // Filter logic
   const filteredActivities = useMemo(() => {
@@ -54,7 +56,7 @@ const App: React.FC = () => {
       </nav>
 
       {/* Hero / Banner Section */}
-      <header className="bg-gradient-to-br from-blue-700 to-blue-900 text-white pt-12 pb-24 px-6 text-center w-full">
+      <header className="bg-linear-to-br from-blue-700 to-blue-900 text-white pt-12 pb-24 px-6 text-center w-full">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight">
             Upptäck ditt nästa <span className="text-blue-300">äventyr</span> i Stockholm
@@ -77,9 +79,8 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 w-full">
-        {/* Left Column: List of Activities */}
 
-        {/* Right Column: Map Section (Sticky on Desktop) */}
+        {/* Left Column: Map Section (Sticky on Desktop) */}
         <aside className="w-full lg:w-175 order-2 lg:order-1">
           <div className="sticky top-24">
             <div className="flex justify-between items-center mb-6">
@@ -93,7 +94,7 @@ const App: React.FC = () => {
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                <h3 className="font-bold text-gray-900 mb-3">Snabba steg</h3>
                <div className="space-y-3">
-                  <button className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group">
+                  <button onClick={() => setIsOpen(true)} className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group">
                      <span className="font-bold text-sm">Skapa ny aktivitet</span>
                      <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                         <Plus size={14} strokeWidth={4} />
@@ -107,6 +108,7 @@ const App: React.FC = () => {
           </div>
         </aside>
 
+        {/* Right Column: List of Activities */}
         <section className="flex-1 order-1 lg:order-2">
           <ActivityList activities={filteredActivities} />
         </section>
@@ -139,6 +141,13 @@ const App: React.FC = () => {
            </div>
         </div>
       </footer>
+
+      <CreateActivityModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Create Activity"
+      />
+      
     </div>
   );
 };
