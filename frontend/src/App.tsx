@@ -10,6 +10,9 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Alla');
   const [isOpen, setIsOpen] = useState(false)
+  const [chosenActivity, setChosenActivity] = useState<number | null>(null)
+
+  console.log("chosen activity in app.tsx", chosenActivity)
 
   // Filter logic
   const filteredActivities = useMemo(() => {
@@ -85,7 +88,10 @@ const App: React.FC = () => {
                 Utforska på karta
               </h2>
             </div>
-            <MapSection activities={filteredActivities} />
+            <MapSection 
+              activities={filteredActivities} 
+              setChosenActivity={(id) => setChosenActivity(id)}
+            />
             
             {/* Quick Actions / Stats Card */}
             <div className="bg-brand-soft-white backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-brand-dark/10">
@@ -107,7 +113,7 @@ const App: React.FC = () => {
 
         {/* Right Column: List of Activities */}
         <section className="flex-1 order-1 lg:order-2">
-          <ActivityList activities={filteredActivities} />
+          <ActivityList chosenActivity={chosenActivity}  activities={filteredActivities} />
         </section>
 
       </main>
