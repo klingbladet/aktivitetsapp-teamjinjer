@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: activenet-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_PASSWORD}
+    ports:
+      - "14333:1433"
+    volumes:
+      - activenet_sql_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  activenet_sql_data:
