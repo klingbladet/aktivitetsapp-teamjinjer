@@ -32,10 +32,10 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow flex flex-col items-start sm:items-center w-full group">
+      <div className="bg-brand-soft-white rounded-2xl shadow-md border border-brand-dark/5 p-5 hover:shadow-xl hover:translate-y-[-2px] transition-all duration-300 flex flex-col gap-5 items-start sm:items-center w-full group">
         {/* Category Icon / Color Strip */}
         <div className='flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full group'>
-          <div className="hidden sm:flex h-12 w-12 rounded-lg bg-blue-50 text-blue-600 items-center justify-center shrink-0">
+          <div className="hidden sm:flex h-14 w-14 rounded-2xl bg-brand-dark/5 text-brand-dark items-center justify-center shrink-0 transition-colors duration-300">
             <Users size={24} />
           </div>
 
@@ -49,7 +49,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
               <div className="flex items-center gap-1.5">
                 <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div 
-                      className={`h-full rounded-full ${isFull ? 'bg-red-500' : 'bg-green-500'}`}
+                      className={`h-full rounded-full ${isFull ? 'bg-brand-light' : 'bg-brand-dark'}`}
                       style={{ width: `${(activity.participants / activity.maxParticipants) * 100}%` }}
                     ></div>
                 </div>
@@ -66,7 +66,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
             className={`w-full sm:w-auto px-6 py-2 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 
               ${isFull 
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' 
-                : 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-sm'}`}
+                : 'bg-brand-dark text-white hover:bg-brand-dark/80 active:scale-95 shadow-sm'}`}
           >
             {isFull ? 'Fullbokat' : 'Gå med'}
             {!isFull && <ChevronRight size={16} />}
@@ -98,7 +98,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
               <div className='w-full px-1'>
                 <h4>Deltagare ({activity.participants}/{activity.maxParticipants}):</h4>
                 <p>{activity.participantNames.map((name, index) => (
-                  <div className='py-2 px-3 border border-brand-light rounded-3xl bg-blue-100/50 text-brand-dark m-2'
+                  <div className='py-2 px-3 border border-brand-light rounded-3xl bg-brand-light text-brand-dark m-2'
                     key={index}>
                       {name}
                   </div>

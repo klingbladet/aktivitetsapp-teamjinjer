@@ -50,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         {/* Buttons / Quick Filters */}
         <div className="flex gap-2">
-          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-brand-light text-brand-dark hover:bg-white rounded-xl transition-all text-sm font-bold shadow-sm active:scale-95">
+          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-brand-light text-brand-dark hover:bg-brand-light/90 rounded-xl transition-all text-sm font-bold shadow-sm active:scale-95">
             <MapPin className="h-4 w-4" />
             Nära mig
           </button>

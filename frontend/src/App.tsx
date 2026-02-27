@@ -24,12 +24,12 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark overflow-x-hidden flex flex-col w-full">
       {/* Navbar / Header */}
-      <nav className="bg-brand-light/95 backdrop-blur-md border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm w-full">
+      <nav className="bg-brand-light/95 backdrop-blur-md border-brand-dark/10 px-6 py-4 flex items-center justify-between sticky top-0 z-50 w-full">
         <div className="flex items-center">
           <span className="text-2xl font-black text-brand-dark tracking-wider font-logo uppercase">JINJER</span>
         </div>
 
-        <div className="hidden md:flex items-center gap-8 ml-12">
+        <div className="hidden md:flex items-center gap-8 ml-40">
            <a href="#" className="text-sm font-semibold text-brand-dark hover:text-brand-dark/70 transition-colors">Upptäck</a>
            <a href="#" className="text-sm font-semibold text-brand-dark/50 hover:text-brand-dark transition-colors">Mina aktiviteter</a>
            <a href="#" className="text-sm font-semibold text-brand-dark/50 hover:text-brand-dark transition-colors">Vänner</a>
@@ -38,7 +38,7 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
            <button className="p-2 text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/10 rounded-lg transition-colors relative">
               <MessageCircle size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 border-2 border-brand-light rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-dark border-2 border-brand-light rounded-full"></span>
            </button>
            <button className="p-2 text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/10 rounded-lg transition-colors">
               <Bell size={20} />
@@ -55,10 +55,10 @@ const App: React.FC = () => {
       {/* Hero / Banner Section */}
       <header className=" from-brand-light to-brand-dark text-brand-dark pt-12 pb-24 px-6 text-center w-full">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight font-display">
-            Upptäck ditt nästa <span className="text-brand-brand-dark italic">äventyr</span> i Stockholm
+          <h1 className="text-4xl font-bold mb-4 leading-tight tracking-tight">
+            Upptäck ditt nästa <span className="text-brand-brand-dark/80">äventyr</span> i Stockholm
           </h1>
-          <p className="text-brand-dark text-lg md:text-xl font-medium max-w-2xl mx-auto opacity-90">
+          <p className="text-brand-dark/80 text-lg md:text-s font-medium max-w-2xl mx-auto opacity-90">
             Hitta, skapa och anslut dig till roliga fritidsaktiviteter nära dig. Enklare än någonsin.
           </p>
         </div>
@@ -81,17 +81,17 @@ const App: React.FC = () => {
         <aside className="w-full lg:w-175 order-2 lg:order-1">
           <div className="sticky top-24">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-brand-dark flex items-center gap-2 font-display">
+              <h2 className="text-xl font-bold text-brand-dark flex items-center gap-2">
                 Utforska på karta
               </h2>
             </div>
             <MapSection activities={filteredActivities} />
             
             {/* Quick Actions / Stats Card */}
-            <div className="bg-brand-light/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-brand-dark/10">
+            <div className="bg-brand-soft-white backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-brand-dark/10">
                <h3 className="font-bold text-brand-dark mb-3">Snabba steg</h3>
                <div className="space-y-3">
-                  <button onClick={() => setIsOpen(true)} className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group">
+                  <button onClick={() => setIsOpen(true)} className="w-full flex items-center justify-between p-3 rounded-xl bg-brand-dark text-brand-light hover:bg-brand-dark/80 transition-colors group">
                      <span className="font-bold text-sm">Skapa ny aktivitet</span>
                      <div className="w-6 h-6 bg-brand-light rounded-md flex items-center justify-center text-brand-dark group-hover:scale-110 transition-transform">
                         <Plus size={14} strokeWidth={4} />
@@ -113,7 +113,7 @@ const App: React.FC = () => {
       </main>
 
       {/* Mobile Bottom Navigation (Optional) */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-brand-light/90 backdrop-blur-md shadow-2xl rounded-full border border-brand-dark/10 flex items-center gap-2 p-2 px-4 z-50">
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2  rounded-full border-none flex items-center gap-2 p-2 px-4 z-50">
           <button className="flex items-center gap-2 p-2 px-4 bg-brand-dark text-brand-light rounded-full font-bold text-sm shadow-lg shadow-brand-dark/20">
              <Plus size={18} strokeWidth={3} />
              Skapa
@@ -127,7 +127,7 @@ const App: React.FC = () => {
               <span className="text-xl font-black text-brand-dark font-logo tracking-wider uppercase">JINJER</span>
            </div>
            <div className="text-brand-dark/40 text-sm">
-              © 2026 Team Jinjer Hackathon. Built with React & Tailwind.
+              © 2026 Team Jinjer.
            </div>
            <div className="flex gap-4">
               <span className="text-xs font-semibold text-brand-dark/40 uppercase tracking-widest cursor-pointer hover:text-brand-dark">Integritet</span>

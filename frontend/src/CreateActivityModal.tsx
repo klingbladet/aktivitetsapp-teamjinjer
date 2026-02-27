@@ -69,13 +69,13 @@ const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
       />
 
       {/* Modal */}
-      <div className="relative z-10 w-full max-w-xl mx-4 bg-white rounded-2xl shadow-xl transform transition-all duration-200 scale-100 animate-in fade-in zoom-in-95">
+      <div className="relative z-10 w-full max-w-xl mx-4 bg-brand-soft-white rounded-2xl shadow-xl transform transition-all duration-200 scale-100 animate-in fade-in zoom-in-95">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-b-gray-200">
+        <div className="flex items-center justify-between px-6 py-4 ">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-brand-dark hover:text-brand-dark/80 text-2xl"
           >
             ×
           </button>
@@ -84,7 +84,7 @@ const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
         {/* Body */}
           <form
             onSubmit={handleSubmit(submitHandler)}
-            className="max-w-lg mx-auto p-6 bg-white rounded-xl space-y-4"
+            className="max-w-lg mx-auto p-6 rounded-xl space-y-4"
           >
             <h2 className="text-xl font-semibold">Create Activity</h2>
 
@@ -119,7 +119,7 @@ const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
               <button
                 type="button"
                 onClick={getLocation}
-                className={`w-full bg-gray-200 py-2 rounded ${locationLoaded ? "bg-green-400" : "bg-gray-200"}`}
+                className={`w-full bg-brand-dark hover:bg-brand-dark text-brand-soft-white py-2 rounded ${locationLoaded ? "bg-brand-dark hover:bg-brand-dark/80"  : "bg-brand-dark hover:bg-brand-dark/80"}`}
               >
                 Use My Current Location
               </button>          
@@ -182,14 +182,14 @@ const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
             <div className="flex w-full justify-center gap-5">
               <button
                 type="submit"
-                className="px-5 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                className="px-5 bg-brand-dark text-brand-lighter py-2 rounded hover:bg-brand-dark/80"
               >
                 Create Activity
               </button>
 
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200"
+                className="px-4 py-2 text-sm rounded-lg bg-brand-light hover:bg-brand-light/50"
               >
                 Cancel
               </button>
