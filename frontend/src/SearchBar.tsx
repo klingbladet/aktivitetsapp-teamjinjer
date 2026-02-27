@@ -15,16 +15,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setSelectedCategory 
 }) => {
   return (
-    <div className="bg-white shadow-md rounded-xl p-4 w-full max-w-4xl mx-auto -mt-8 relative z-10 border border-gray-100">
+    <div className="bg-brand-dark shadow-2xl rounded-2xl p-6 w-full max-w-4xl mx-auto -mt-10 relative z-10 border border-white/5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Search Field */}
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-brand-dark/40" />
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-500"
+            className="block w-full pl-10 pr-3 py-3 border-0 rounded-xl focus:ring-2 focus:ring-brand-light/50 text-sm placeholder-brand-dark/30 text-brand-dark bg-brand-soft-white transition-all font-medium"
             placeholder="Sök efter aktivitet..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -34,10 +34,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         {/* Category Filter */}
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Filter className="h-5 w-5 text-gray-400" />
+            <Filter className="h-5 w-5 text-brand-dark/40" />
           </div>
           <select
-            className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 bg-white"
+            className="block w-full pl-10 pr-3 py-3 border-0 rounded-xl focus:ring-2 focus:ring-brand-light/50 text-sm text-brand-dark bg-brand-soft-white transition-all appearance-none cursor-pointer font-medium"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -50,11 +50,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         {/* Buttons / Quick Filters */}
         <div className="flex gap-2">
-          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm">
+          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-brand-light text-brand-dark hover:bg-white rounded-xl transition-all text-sm font-bold shadow-sm active:scale-95">
             <MapPin className="h-4 w-4" />
             Nära mig
           </button>
-          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg transition-colors text-sm font-medium">
+          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-brand-light border border-white/10 rounded-xl transition-all text-sm font-bold active:scale-95">
             <Calendar className="h-4 w-4" />
             Idag
           </button>

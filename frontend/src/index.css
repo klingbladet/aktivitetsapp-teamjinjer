@@ -1,12 +1,25 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Quicksand", sans-serif;
+  --font-logo: "Roboto", sans-serif;
+  
+  /* Dina nya märkesfärger */
+  --color-brand-light: #FFD2EB;
+  --color-brand-lighter: #FFF5FA;
+  --color-brand-soft-white: #FFE2F2;
+  --color-brand-dark: #430119;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Montserrat", sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #430119;
+  /* Uppdaterad till ljusrosa */
+  background-color: #FFD2EB;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -17,4 +30,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-light);
 }

@@ -12,6 +12,15 @@ const containerStyle = {
   borderRadius: '1rem',
 };
 
+const getMarkerIcon = (type: string): google.maps.Symbol => ({
+  path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z", // Klassisk "pin"-form (SVG-path)
+  fillColor: '#430119', // Exempel: Blå för fotboll, orange för resten
+  fillOpacity: 1,
+  strokeWeight: 1.5,
+  strokeColor: "#FFFFFF",
+  scale: 1.5,
+  anchor: new google.maps.Point(12, 22), // Sätter "spetsen" på rätt ställe
+});
 const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
 
@@ -61,6 +70,26 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
     );
   }
 
+  const monoChromeStyle = [
+    {
+      featureType: "all",
+      stylers: [{ saturation: -100 }]
+    },
+    {
+      featureType: "poi", // Döljer intressepunkter som du redan hade i din kod
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "road",
+      elementType: "geometry.fill",
+      stylers: [{ color: "#ffffff" }]
+    },
+    {
+      featureType: "water",
+      stylers: [{ color: "#c9c9c9" }]
+    }
+  ];
+
   return (
     <div className="w-full relative shadow-lg rounded-2xl overflow-hidden mb-8 border border-gray-200">
       <GoogleMap
@@ -73,22 +102,19 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
           zoomControl: true,
           // Using a mapId is recommended for Advanced Markers to avoid the deprecation warning
           // mapId: 'YOUR_MAP_ID', 
-          styles: [
-            {
-              featureType: "poi",
-              stylers: [{ visibility: "off" }]
-            }
-          ]
+          styles: monoChromeStyle
         }}
       >
-        {activities.map((activity) => (
-          <MarkerF
-            key={activity.id}
-            position={{ lat: activity.lat, lng: activity.lng }}
-            onClick={() => setSelectedActivity(activity)}
-            title={activity.title}
-          />
-        ))}
+    {activities.map((activity) => (
+      <MarkerF
+        key={activity.id}
+        position={{ lat: activity.lat, lng: activity.lng }}
+        onClick={() => setSelectedActivity(activity)}
+        title={activity.title}
+        // HÄR LÄGGER DU TILL IKONEN:
+        icon={getMarkerIcon(activity.type)} 
+      />
+    ))}
 
         {selectedActivity && (
           <InfoWindowF
