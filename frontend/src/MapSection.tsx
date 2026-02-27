@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import React, { useState, useCallback, useMemo } from 'react';
+import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import type { Activity } from './MockData';
 
 interface MapSectionProps {
@@ -12,39 +12,51 @@ const containerStyle = {
   borderRadius: '1rem',
 };
 
-const center = {
-  lat: 59.3293,
-  lng: 18.0686, // Stockholm
-};
-
 const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
-  // Normally you would get this from process.env or similar
-  const { isLoaded } = useJsApiLoader({
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+
+  // Memoize libraries to prevent unnecessary re-renders
+  const libraries = useMemo(() => ['marker', 'places'], []);
+
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "", // Placeholder, would need a real key to work
+    googleMapsApiKey: apiKey || '',
+    libraries: libraries as any
   });
 
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
-  const onLoad = useCallback(function callback() {
-    // Optional: add logic here if you need to access map instance
-  }, []);
+  // Stockholm default center
+  const center = useMemo(() => ({
+    lat: 59.3293,
+    lng: 18.0686,
+  }), []);
 
-  const onUnmount = useCallback(function callback() {
-    // Optional: add logic here if you need to access map instance
-  }, []);
+  const onLoad = useCallback((map: google.maps.Map) => {
+    if (activities.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds();
+      activities.forEach((activity) => {
+        bounds.extend({ lat: activity.lat, lng: activity.lng });
+      });
+      map.fitBounds(bounds);
+    }
+  }, [activities]);
 
-  if (!isLoaded) {
+  if (loadError) {
+    return (
+      <div className="w-full h-[400px] bg-red-50 rounded-2xl flex flex-col items-center justify-center border-2 border-red-200 p-6 text-center">
+        <p className="text-red-600 font-bold">Kunde inte ladda kartan</p>
+        <p className="text-red-500 text-sm mt-2">{loadError.message}</p>
+        <p className="text-xs text-red-400 mt-4">Kontrollera din API-nyckel i .env.local och att Maps JavaScript API är aktiverat.</p>
+      </div>
+    );
+  }
+
+  if (!isLoaded || !apiKey) {
     return (
       <div className="w-full h-[400px] bg-gray-100 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
-        <div className="text-gray-500 font-medium text-lg">Laddar karta...</div>
-        <p className="text-gray-400 text-sm mt-2">(Ange Google Maps API-nyckel i koden för att visa riktig karta)</p>
-        <div className="mt-4 flex gap-4 overflow-hidden p-2 opacity-50 grayscale pointer-events-none">
-          {/* Mock visual representation of markers */}
-          {[1, 2, 3, 4, 5].map(i => (
-             <div key={i} className="w-4 h-4 bg-red-500 rounded-full shadow-sm"></div>
-          ))}
-        </div>
+        <div className="text-gray-500 font-medium text-lg italic">Laddar karta...</div>
+        {!apiKey && <p className="text-red-400 text-xs mt-2">API-nyckel saknas i miljövariabler</p>}
       </div>
     );
   }
@@ -56,12 +68,13 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
         center={center}
         zoom={12}
         onLoad={onLoad}
-        onUnmount={onUnmount}
         options={{
           disableDefaultUI: false,
           zoomControl: true,
+          // Using a mapId is recommended for Advanced Markers to avoid the deprecation warning
+          // mapId: 'YOUR_MAP_ID', 
           styles: [
-             {
+            {
               featureType: "poi",
               stylers: [{ visibility: "off" }]
             }
@@ -69,7 +82,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
         }}
       >
         {activities.map((activity) => (
-          <Marker
+          <MarkerF
             key={activity.id}
             position={{ lat: activity.lat, lng: activity.lng }}
             onClick={() => setSelectedActivity(activity)}
@@ -78,11 +91,11 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
         ))}
 
         {selectedActivity && (
-          <InfoWindow
+          <InfoWindowF
             position={{ lat: selectedActivity.lat, lng: selectedActivity.lng }}
             onCloseClick={() => setSelectedActivity(null)}
           >
-            <div className="p-2 max-w-[200px]">
+            <div className="p-2 max-w-[200px] bg-white">
               <h3 className="font-bold text-gray-800 text-sm mb-1">{selectedActivity.title}</h3>
               <p className="text-xs text-gray-600 mb-2">{selectedActivity.location}</p>
               <div className="flex justify-between items-center">
@@ -90,7 +103,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
                 <span className="text-xs text-gray-400">{selectedActivity.participants}/{selectedActivity.maxParticipants}</span>
               </div>
             </div>
-          </InfoWindow>
+          </InfoWindowF>
         )}
       </GoogleMap>
     </div>
