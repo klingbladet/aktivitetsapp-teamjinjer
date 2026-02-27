@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
-import type { Activity } from './MockData';
+import type { Activity } from './types';
 
 interface MapSectionProps {
   activities: Activity[];
@@ -53,7 +53,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
 
   if (loadError) {
     return (
-      <div className="w-full h-[400px] bg-red-50 rounded-2xl flex flex-col items-center justify-center border-2 border-red-200 p-6 text-center">
+      <div className="w-full h-100 bg-red-50 rounded-2xl flex flex-col items-center justify-center border-2 border-red-200 p-6 text-center">
         <p className="text-red-600 font-bold">Kunde inte ladda kartan</p>
         <p className="text-red-500 text-sm mt-2">{loadError.message}</p>
         <p className="text-xs text-red-400 mt-4">Kontrollera din API-nyckel i .env.local och att Maps JavaScript API är aktiverat.</p>
@@ -63,7 +63,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
 
   if (!isLoaded || !apiKey) {
     return (
-      <div className="w-full h-[400px] bg-gray-100 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+      <div className="w-full h-100 bg-gray-100 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
         <div className="text-gray-500 font-medium text-lg italic">Laddar karta...</div>
         {!apiKey && <p className="text-red-400 text-xs mt-2">API-nyckel saknas i miljövariabler</p>}
       </div>
@@ -121,7 +121,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
             position={{ lat: selectedActivity.lat, lng: selectedActivity.lng }}
             onCloseClick={() => setSelectedActivity(null)}
           >
-            <div className="p-2 max-w-[200px] bg-white">
+            <div className="p-2 max-w-50 bg-white">
               <h3 className="font-bold text-gray-800 text-sm mb-1">{selectedActivity.title}</h3>
               <p className="text-xs text-gray-600 mb-2">{selectedActivity.location}</p>
               <div className="flex justify-between items-center">

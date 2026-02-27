@@ -1,6 +1,6 @@
 import React from 'react';
 import ActivityCard from './ActivityCard';
-import type { Activity } from './MockData';
+import type { Activity } from './types';
 import { LayoutGrid, ListFilter } from 'lucide-react';
 
 interface ActivityListProps {

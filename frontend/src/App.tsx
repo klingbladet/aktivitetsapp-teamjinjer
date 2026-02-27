@@ -1,25 +1,47 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import MapSection from './MapSection';
 import ActivityList from './ActivityList';
-import { mockActivities } from './MockData';
 import { Plus, Bell, User, MessageCircle } from 'lucide-react';
 import CreateActivityModal from './CreateActivityModal';
+import { api } from './api';
+import type { Activity } from './types';
 
 const App: React.FC = () => {
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Alla');
   const [isOpen, setIsOpen] = useState(false)
 
-  // Filter logic
-  const filteredActivities = useMemo(() => {
-    return mockActivities.filter((activity) => {
-      const matchesSearch = activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           activity.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'Alla' || activity.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
+  // Fetch activities from API
+  const fetchActivities = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await api.activities.getAll(searchTerm || undefined, selectedCategory);
+      setActivities(data);
+    } catch (err) {
+      console.error('Failed to fetch activities:', err);
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivities();
   }, [searchTerm, selectedCategory]);
+
+  const filteredActivities = useMemo(() => {
+    return activities;
+  }, [activities]);
+
+  const handleActivityCreated = () => {
+    setIsOpen(false);
+    fetchActivities();
+  };
 
   return (
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark overflow-x-hidden flex flex-col w-full">
@@ -107,7 +129,25 @@ const App: React.FC = () => {
 
         {/* Right Column: List of Activities */}
         <section className="flex-1 order-1 lg:order-2">
-          <ActivityList activities={filteredActivities} />
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4">
+              <p className="text-red-600 font-medium">Error: {error}</p>
+              <button 
+                onClick={fetchActivities}
+                className="text-red-600 underline text-sm mt-2"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+          {loading ? (
+            <div className="bg-brand-light/50 rounded-2xl p-12 flex flex-col items-center justify-center">
+              <div className="w-8 h-8 border-4 border-brand-dark/20 border-t-brand-dark rounded-full animate-spin mb-4"></div>
+              <p className="text-brand-dark/60">Loading activities...</p>
+            </div>
+          ) : (
+            <ActivityList activities={filteredActivities} />
+          )}
         </section>
 
       </main>
@@ -140,6 +180,7 @@ const App: React.FC = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Create Activity"
+        onActivityCreated={handleActivityCreated}
       />
       
     </div>

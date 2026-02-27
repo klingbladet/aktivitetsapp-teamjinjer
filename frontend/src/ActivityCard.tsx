@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Users, ChevronRight } from 'lucide-react';
-import type { Activity } from './MockData';
+import type { Activity } from './types';
 import { CgChevronDown, CgChevronUp } from "react-icons/cg";
 
 interface ActivityCardProps {
@@ -32,7 +32,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
 
   return (
     <>
-      <div className="bg-brand-soft-white rounded-2xl shadow-md border border-brand-dark/5 p-5 hover:shadow-xl hover:translate-y-[-2px] transition-all duration-300 flex flex-col gap-5 items-start sm:items-center w-full group">
+      <div className="bg-brand-soft-white rounded-2xl shadow-md border border-brand-dark/5 p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-5 items-start sm:items-center w-full group">
         {/* Category Icon / Color Strip */}
         <div className='flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full group'>
           <div className="hidden sm:flex h-14 w-14 rounded-2xl bg-brand-dark/5 text-brand-dark items-center justify-center shrink-0 transition-colors duration-300">
@@ -97,12 +97,15 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
               <p className='w-full pb-2'>{content}</p>
               <div className='w-full px-1'>
                 <h4>Deltagare ({activity.participants}/{activity.maxParticipants}):</h4>
-                <p>{activity.participantNames.map((name, index) => (
-                  <div className='py-2 px-3 border border-brand-light rounded-3xl bg-brand-light text-brand-dark m-2'
-                    key={index}>
-                      {name}
-                  </div>
-                ))}</p>
+                <div className='flex flex-wrap gap-2'>{activity.participants > 0 ? (
+                <div className='py-2 px-3 border border-brand-light rounded-3xl bg-brand-light text-brand-dark'>
+                  {activity.participants} anmälda deltagare
+                </div>
+              ) : (
+                <div className='py-2 px-3 border border-brand-light rounded-3xl bg-brand-light text-brand-dark'>
+                  Ingen har anmält sig ännu
+                </div>
+              )}</div>
               </div>
             </div>
           )}

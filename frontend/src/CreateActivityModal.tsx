@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form" 
+import { api } from "./api";
+import type { CreateActivityRequest } from "./types";
 
 interface ModalProps {
   isOpen: boolean,
   onClose: () => void,
   title: string,
+  onActivityCreated?: () => void,
 }
 
 interface ActivityFormValues {
@@ -19,27 +22,60 @@ interface ActivityFormValues {
   lng?: number;
 }
 
-const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
+const CreateActivityModal = ({ isOpen, onClose, title, onActivityCreated }: ModalProps) => {
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<ActivityFormValues>();
 
   const [locationLoaded, setLocationLoaded] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const submitHandler = (data: ActivityFormValues) => {
-    console.log("Form Data:", data);
+  const submitHandler = async (data: ActivityFormValues) => {
+    try {
+      setSubmitError(null);
+      
+      // Validate location
+      if (!data.lat || !data.lng) {
+        setSubmitError("Please set your location");
+        return;
+      }
+
+      const createRequest: CreateActivityRequest = {
+        title: data.title,
+        category: data.category,
+        location: data.location,
+        date: data.date,
+        time: data.time,
+        maxParticipants: parseInt(data.maxParticipants.toString()),
+        description: data.description,
+        lat: data.lat,
+        lng: data.lng,
+      };
+
+      await api.activities.create(createRequest);
+      reset();
+      setLocationLoaded(false);
+      onActivityCreated?.();
+    } catch (err) {
+      setSubmitError((err as Error).message);
+    }
   };
 
   const getLocation = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setValue("lat", position.coords.latitude);
-      setValue("lng", position.coords.longitude);
-    });
-    setLocationLoaded(true)
-    console.log("Localtion saved")
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setValue("lat", position.coords.latitude);
+        setValue("lng", position.coords.longitude);
+        setLocationLoaded(true);
+      },
+      (error) => {
+        setSubmitError("Failed to get location: " + error.message);
+      }
+    );
   };
 
   useEffect(() => {
@@ -82,127 +118,150 @@ const CreateActivityModal = ({ isOpen, onClose, title,  }: ModalProps) => {
         </div>
 
         {/* Body */}
-          <form
-            onSubmit={handleSubmit(submitHandler)}
-            className="max-w-lg mx-auto p-6 rounded-xl space-y-4"
-          >
-            <h2 className="text-xl font-semibold">Create Activity</h2>
+        <form
+          onSubmit={handleSubmit(submitHandler)}
+          className="max-w-lg mx-auto p-6 rounded-xl space-y-4"
+        >
+          <h2 className="text-xl font-semibold">Create Activity</h2>
 
-            {/* Title */}
-            <div>
-              <input
-                {...register("title", { required: "Title is required" })}
-                placeholder="Activity Title"
-                className="w-full border p-2 rounded"
-              />
-              {errors.title && (
-                <p className="text-red-500 text-sm">{typeof errors.title.message == "string" ? errors.title.message : "An"}</p>
-              )}
+          {submitError && (
+            <div className="bg-red-50 border border-red-200 rounded p-3">
+              <p className="text-red-600 text-sm">{submitError}</p>
             </div>
+          )}
 
-            {/* Category */}
-            <div>
-              <input
-                {...register("category", { required: "Category is required" })}
-                placeholder="Category"
-                className="w-full border p-2 rounded"
-              />
-              {errors.category && (
-                <p className="text-red-500 text-sm">{errors.category.message}</p>
-              )}
-            </div>
+          {/* Title */}
+          <div>
+            <input
+              {...register("title", { required: "Title is required" })}
+              placeholder="Activity Title"
+              className="w-full border p-2 rounded"
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm">{typeof errors.title.message == "string" ? errors.title.message : "Error"}</p>
+            )}
+          </div>
 
-            {/* Location */}
-            <div>
-              <input type="hidden" {...register("lat")} />
-              <input type="hidden" {...register("lng")} />    
-              <button
-                type="button"
-                onClick={getLocation}
-                className={`w-full bg-brand-dark hover:bg-brand-dark text-brand-soft-white py-2 rounded ${locationLoaded ? "bg-brand-dark hover:bg-brand-dark/80"  : "bg-brand-dark hover:bg-brand-dark/80"}`}
-              >
-                Use My Current Location
-              </button>          
-              {errors.location && (
-                <p className="text-red-500 text-sm">{errors.location.message}</p>
-              )}
-            </div>
+          {/* Category */}
+          <div>
+            <select
+              {...register("category", { required: "Category is required" })}
+              className="w-full border p-2 rounded"
+            >
+              <option value="">Select Category</option>
+              <option value="Sport">Sport</option>
+              <option value="Kultur">Kultur</option>
+              <option value="Mat och dryck">Mat och dryck</option>
+              <option value="Utomhus">Utomhus</option>
+              <option value="Socialt">Socialt</option>
+            </select>
+            {errors.category && (
+              <p className="text-red-500 text-sm">{errors.category.message}</p>
+            )}
+          </div>
 
-            {/* Date */}
-            <div>
-              <input
-                type="date"
-                {...register("date", { required: "Date is required" })}
-                className="w-full border p-2 rounded"
-              />
-              {errors.date && (
-                <p className="text-red-500 text-sm">{errors.date.message}</p>
-              )}
-            </div>
+          {/* Location Name */}
+          <div>
+            <input
+              {...register("location", { required: "Location name is required" })}
+              placeholder="Location Name (e.g., Vasaparken, Stockholm)"
+              className="w-full border p-2 rounded"
+            />
+            {errors.location && (
+              <p className="text-red-500 text-sm">{errors.location.message}</p>
+            )}
+          </div>
 
-            {/* Time */}
-            <div>
-              <input
-                type="time"
-                {...register("time", { required: "Time is required" })}
-                className="w-full border p-2 rounded"
-              />
-              {errors.time && (
-                <p className="text-red-500 text-sm">{errors.time.message}</p>
-              )}
-            </div>
+          {/* GPS Location */}
+          <div>
+            <input type="hidden" {...register("lat")} />
+            <input type="hidden" {...register("lng")} />    
+            <button
+              type="button"
+              onClick={getLocation}
+              className={`w-full text-brand-soft-white py-2 rounded transition-colors ${
+                locationLoaded 
+                  ? "bg-green-600 hover:bg-green-700" 
+                  : "bg-brand-dark hover:bg-brand-dark/80"
+              }`}
+            >
+              {locationLoaded ? "✓ Location Saved" : "Use My Current Location"}
+            </button>          
+          </div>
 
-            {/* Max Participants */}
-            <div>
-              <input
-                type="number"
-                {...register("maxParticipants", {
-                  required: "Max participants required",
-                  min: { value: 1, message: "Must be at least 1" },
-                })}
-                placeholder="Max Participants"
-                className="w-full border p-2 rounded"
-              />
-              {errors.maxParticipants && (
-                <p className="text-red-500 text-sm">
-                  {errors.maxParticipants.message}
-                </p>
-              )}
-            </div>
+          {/* Date */}
+          <div>
+            <input
+              type="date"
+              {...register("date", { required: "Date is required" })}
+              className="w-full border p-2 rounded"
+            />
+            {errors.date && (
+              <p className="text-red-500 text-sm">{errors.date.message}</p>
+            )}
+          </div>
 
-            {/* Description */}
-            <div>
-              <textarea
-                {...register("description")}
-                placeholder="Description"
-                className="w-full border p-2 rounded"
-              />
-            </div>
+          {/* Time */}
+          <div>
+            <input
+              type="time"
+              {...register("time", { required: "Time is required" })}
+              className="w-full border p-2 rounded"
+            />
+            {errors.time && (
+              <p className="text-red-500 text-sm">{errors.time.message}</p>
+            )}
+          </div>
 
-            <div className="flex w-full justify-center gap-5">
-              <button
-                type="submit"
-                className="px-5 bg-brand-dark text-brand-lighter py-2 rounded hover:bg-brand-dark/80"
-              >
-                Create Activity
-              </button>
+          {/* Max Participants */}
+          <div>
+            <input
+              type="number"
+              {...register("maxParticipants", {
+                required: "Max participants required",
+                min: { value: 1, message: "Must be at least 1" },
+              })}
+              placeholder="Max Participants"
+              className="w-full border p-2 rounded"
+            />
+            {errors.maxParticipants && (
+              <p className="text-red-500 text-sm">
+                {errors.maxParticipants.message}
+              </p>
+            )}
+          </div>
 
-              <button
-                onClick={onClose}
-                className="px-4 py-2 text-sm rounded-lg bg-brand-light hover:bg-brand-light/50"
-              >
-                Cancel
-              </button>
+          {/* Description */}
+          <div>
+            <textarea
+              {...register("description")}
+              placeholder="Description"
+              className="w-full border p-2 rounded"
+              rows={3}
+            />
+          </div>
 
-            </div>
+          <div className="flex w-full justify-center gap-5">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-5 bg-brand-dark text-brand-lighter py-2 rounded hover:bg-brand-dark/80 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? "Creating..." : "Create Activity"}
+            </button>
 
-          </form>
-        
-
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm rounded-lg bg-brand-light hover:bg-brand-light/50"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-
 
 export default CreateActivityModal
