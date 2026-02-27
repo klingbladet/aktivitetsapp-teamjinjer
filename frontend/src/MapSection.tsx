@@ -12,7 +12,7 @@ const containerStyle = {
   borderRadius: '1rem',
 };
 
-const getMarkerIcon = (type: string): google.maps.Symbol => ({
+const getMarkerIcon = (): google.maps.Symbol => ({
   path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z", // Klassisk "pin"-form (SVG-path)
   fillColor: '#430119', // Exempel: Blå för fotboll, orange för resten
   fillOpacity: 1,
@@ -30,7 +30,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey || '',
-    libraries: libraries as any
+    libraries: libraries as ("marker" | "places")[]
   });
 
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
@@ -112,7 +112,7 @@ const MapSection: React.FC<MapSectionProps> = ({ activities }) => {
         onClick={() => setSelectedActivity(activity)}
         title={activity.title}
         // HÄR LÄGGER DU TILL IKONEN:
-        icon={getMarkerIcon(activity.type)} 
+        icon={getMarkerIcon()} 
       />
     ))}
 
