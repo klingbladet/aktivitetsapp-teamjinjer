@@ -1,0 +1,30 @@
+
+# ========================
+# Secrets / Sensitive Data
+# ========================
+
+.env
+appsettings.Development.json
+appsettings.Local.json
+
+# User secrets (just in case)
+secrets.json
+
+# ========================
+# .NET
+# ========================
+
+bin/
+obj/
+
+# ========================
+# Visual Studio
+# ========================
+
+
+
+# ========================
+# Logs
+# ========================
+
+*.log
